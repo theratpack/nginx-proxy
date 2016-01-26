@@ -21,14 +21,15 @@ ENV DOCKER_GEN_VERSION 0.4.2
 
 RUN wget https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
  && tar -C /usr/local/bin -xvzf docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
- && rm /docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz
+ && rm /docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
+ && mkdir /etc/nginx/vhost.d /etc/nginx/htpasswd /etc/nginx/tmpl
 
 COPY . /app/
 WORKDIR /app/
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
-VOLUME ["/etc/nginx/certs"]
+VOLUME ["/etc/nginx/certs", "/etc/nginx/vhost.d", "/etc/nginx/htpasswd", "/etc/nginx/tmpl"]
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["forego", "start", "-r"]
